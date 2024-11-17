@@ -16,7 +16,6 @@ const shopReviewRouter = require("./routes/shop/review-routes");
 
 const commonFeatureRouter = require("./routes/common/feature-routes");
 
-
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
@@ -25,23 +24,30 @@ mongoose
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// CORS Configuration
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
-    methods: ["GET", "POST", "DELETE", "PUT"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Cache-Control",
-      "Expires",
-      "Pragma",
-    ],
-    credentials: true,
+    origin: process.env.CORS_ORIGIN, // Frontend URL
+    methods: ["GET", "POST", "DELETE", "PUT"], // Allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Essential headers
+    credentials: true, // To allow cookies/authorization headers
   })
 );
 
+// Log the incoming request origin for debugging
+app.use((req, res, next) => {
+  console.log(`Incoming request from origin: ${req.headers.origin}`);
+  next();
+});
+
+// Handle preflight requests
+app.options("*", cors());
+
+// Middleware
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json()); // Parse JSON bodies
+
+// API Routes
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/admin/orders", adminOrderRouter);
@@ -54,3 +60,4 @@ app.use("/api/shop/review", shopReviewRouter);
 app.use("/api/common/feature", commonFeatureRouter);
 
 app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
+
