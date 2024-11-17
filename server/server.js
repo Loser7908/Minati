@@ -29,7 +29,7 @@ const PORT = process.env.PORT || 5000;
 // CORS Configuration
 app.use(
   cors({
-    origin: [process.env.CORS_ORIGIN, "http://localhost:5173"], // Allowed origins (adjust for your environment)
+    origin: [process.env.CORS_ORIGIN, "http://localhost:5173","https://minati-zeta.vercel.app/"], // Allowed origins (adjust for your environment)
     methods: ["GET", "POST", "DELETE", "PUT"], // Allowed methods
     allowedHeaders: ["Content-Type",
       "Authorization",
